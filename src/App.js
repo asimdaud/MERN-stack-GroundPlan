@@ -1,25 +1,49 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { Container } from '@mui/material';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
-function App() {
+import PostDetails from './components/PostDetails/PostDetails';
+import Navbar from './components/Navbar/Navbar';
+import Home from './components/Home/Home';
+import Auth from './components/Auth/Auth';
+import CreatorOrTag from './components/CreatorOrTag/CreatorOrTag';
+import Planner from './components/Planner/Planner';
+
+import { ThemeProvider } from '@mui/styles'
+import { createTheme, responsiveFontSizes } from '@mui/material/styles';
+
+const App = () => {
+  const user = JSON.parse(localStorage.getItem('profile'));
+
+  let theme = createTheme();
+  theme = responsiveFontSizes(theme);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+
+    <BrowserRouter>
+      <Container maxWidth="xl">
+        <Navbar />
+        <Routes>
+          {/* From */}
+          {/* <Route path="/" element={Home} /> */}
+          {/* To */}
+          {/* <Route path='/welcome' element={<Home/>} /> */}
+
+          <Route path="/" exact element={<Navigate to="/posts" />} />
+          <Route path="/posts" exact element={<Home/>} />
+          <Route path="/posts/search" exact element={<Home/>} />
+          <Route path="/posts/:id" exact element={<PostDetails/>} />
+          <Route path="'/creators/:name', '/tags/:name'" element={<CreatorOrTag/>} />
+          <Route path="/auth" exact element={!user ? <Auth /> : <Navigate to="/posts" />} />
+          <Route path="/planner" exact element={<Planner/>} />
+
+          
+        </Routes>
+      </Container>
+    </BrowserRouter>
+    </ThemeProvider>
   );
-}
+};
 
 export default App;
